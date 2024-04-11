@@ -1,0 +1,7 @@
+﻿@Megaverse_HostAddress = http://localhost:5116
+
+GET {{Megaverse_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
