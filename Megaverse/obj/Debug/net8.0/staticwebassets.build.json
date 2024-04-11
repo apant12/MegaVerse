@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "4xlTT2vRRC3yrhvJ5EB32Mj+5vgdvk/aav+k5jLGqaE=",
+  "Hash": "KyPUmdN8lofGI7S6vMns+4QLLaDFG3TSs5IXgjfevFM=",
   "Source": "Megaverse",
   "BasePath": "_content/Megaverse",
   "Mode": "Default",
@@ -47,10 +47,10 @@
       "OriginalItemSpec": "/Users/ayushpant/.nuget/packages/microsoft.aspnetcore.components.quickgrid/8.0.3/staticwebassets/QuickGrid.razor.js"
     },
     {
-      "Identity": "/Users/ayushpant/Projects/Megaverse/Megaverse/obj/Debug/net8.0/scopedcss/bundle/Megaverse.styles.css",
+      "Identity": "/Users/ayushpant/Desktop/Megaverse/MegaVerse/Megaverse/obj/Debug/net8.0/scopedcss/bundle/Megaverse.styles.css",
       "SourceId": "Megaverse",
       "SourceType": "Computed",
-      "ContentRoot": "/Users/ayushpant/Projects/Megaverse/Megaverse/obj/Debug/net8.0/scopedcss/bundle/",
+      "ContentRoot": "/Users/ayushpant/Desktop/Megaverse/MegaVerse/Megaverse/obj/Debug/net8.0/scopedcss/bundle/",
       "BasePath": "_content/Megaverse",
       "RelativePath": "Megaverse.styles.css",
       "AssetKind": "All",
@@ -63,7 +63,7 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/ayushpant/Projects/Megaverse/Megaverse/obj/Debug/net8.0/scopedcss/bundle/Megaverse.styles.css"
+      "OriginalItemSpec": "/Users/ayushpant/Desktop/Megaverse/MegaVerse/Megaverse/obj/Debug/net8.0/scopedcss/bundle/Megaverse.styles.css"
     }
   ]
 }

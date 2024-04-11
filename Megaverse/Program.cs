@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using Megaverse.Service;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +14,14 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddHttpClient();
-var candidateId = "your_candidate_id"; // Ideally, store this in a secure place like appsettings.json or environment variables
+
 builder.Services.AddSingleton<MegaverseService>(sp =>
-    new MegaverseService(sp.GetRequiredService<IHttpClientFactory>().CreateClient(), candidateId));
+    new MegaverseService(
+        sp.GetRequiredService<IHttpClientFactory>(),
+        sp.GetRequiredService<ILogger<MegaverseService>>(),
+        "3ade151f-3c7d-4dd3-8588-2d197a3c0565" // Replace with your actual candidate ID
+    ));
+
 
 builder.Services.AddControllers();
 // Other service configurations...

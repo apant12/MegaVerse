@@ -1,0 +1,36 @@
+﻿<Properties StartupConfiguration="{0E231138-44E0-455E-A2C6-1C8DC92B5393}|https">
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Megaverse/Controllers/MegaVerse.cs">
+    <Files>
+      <File FileName="Megaverse/Models/AstralObjectRequest.cs" Line="15" Column="1" />
+      <File FileName="Megaverse/Models/AstralObjectResponse.cs" Line="1" Column="1" />
+      <File FileName="Megaverse/Controllers/MegaVerse.cs" Line="28" Column="1" />
+      <File FileName="Megaverse/Service/MegaverseService.cs" Line="43" Column="23" />
+      <File FileName="Megaverse/appsettings.json" Line="1" Column="1" />
+      <File FileName="Megaverse/WeatherForecast.cs" Line="1" Column="1" />
+      <File FileName="Megaverse/Program.cs" Line="23" Column="8" />
+      <File FileName="Megaverse/Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="Megaverse/Megaverse.http" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Megaverse">
+            <Node name="Megaverse">
+              <Node name="Controllers">
+                <Node name="MegaVerse.cs" selected="True" />
+              </Node>
+              <Node name="Properties" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Megaverse PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
