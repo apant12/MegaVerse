@@ -22,6 +22,19 @@ builder.Services.AddSingleton<MegaverseService>(sp =>
         "3ade151f-3c7d-4dd3-8588-2d197a3c0565" // Replace with your actual candidate ID
     ));
 
+builder.Services.AddSingleton<ComethService>(sp =>
+    new ComethService(
+        sp.GetRequiredService<IHttpClientFactory>(),
+        sp.GetRequiredService<ILogger<ComethService>>(),
+        "3ade151f-3c7d-4dd3-8588-2d197a3c0565" // Replace with your actual candidate ID
+    ));
+
+builder.Services.AddSingleton<SoloonService>(sp =>
+    new SoloonService(
+        sp.GetRequiredService<IHttpClientFactory>(),
+        sp.GetRequiredService<ILogger<SoloonService>>(),
+        "3ade151f-3c7d-4dd3-8588-2d197a3c0565" // Replace with your actual candidate ID
+    ));
 
 builder.Services.AddControllers();
 // Other service configurations...

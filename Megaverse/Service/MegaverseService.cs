@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -57,10 +58,8 @@ namespace Megaverse.Service
         }
 
 
-
         public async Task<AstralObjectResponse> DeletePolyanetAsync(int row, int column)
         {
-            // Log the attempt to delete the Polyanet at the given coordinates.
             _logger.LogInformation($"Attempting to delete Polyanet at row {row}, column {column}.");
             using var httpClient = _httpClient.CreateClient();
             var requestBody = new
@@ -73,28 +72,46 @@ namespace Megaverse.Service
             var jsonRequest = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            var request = new HttpRequestMessage
+            HttpResponseMessage response;
+            int retryCount = 0;
+            int maxRetries = 3; // Set the maximum number of retries
+            do
             {
-                Method = HttpMethod.Delete,
-                RequestUri = new Uri($"{_baseUrl}/polyanets"),
-                Content = content
-            };
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri($"{_baseUrl}/polyanets"),
+                    Content = content
+                };
 
-            var response = await httpClient.SendAsync(request);
+                response = await httpClient.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                {
+                    // Calculate the delay with an exponential backoff factor
+                    int delay = (int)Math.Pow(2, retryCount) * 1000; // Exponential backoff factor
+                    _logger.LogWarning($"Rate limit exceeded, retrying in {delay}ms...");
+                    await Task.Delay(delay);
+                    retryCount++;
+                }
+                else
+                {
+                    break;
+                }
+            } while (retryCount <= maxRetries);
 
             if (response.IsSuccessStatusCode)
             {
+                _logger.LogInformation($"Successfully deleted Polyanet at row {row}, column {column}.");
                 return new AstralObjectResponse { Success = true };
             }
             else
             {
-                // The deletion was not successful. Log the status code and response.
                 var errorResponse = await response.Content.ReadAsStringAsync();
                 _logger.LogError($"Failed to delete Polyanet at row {row}, column {column}. Response: {errorResponse}");
                 return new AstralObjectResponse { Success = false, Error = errorResponse };
             }
         }
-
 
         public async Task<bool> DeleteOnePolyanetAsync(int row, int column)
         {
@@ -135,18 +152,35 @@ namespace Megaverse.Service
         public async Task<AstralObjectResponse> CreatePolyanetAsync(AstralObjectRequest request)
         {
             using var httpClient = _httpClient.CreateClient();
-
             var requestBody = new
             {
                 candidateId = _candidateId,
-                column = request.Column,
-                row = request.Row
-
+                row = request.Row,
+                column = request.Column
             };
+
             var jsonRequest = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            var response = await httpClient.PostAsync($"{_baseUrl}/polyanets", content);
+            HttpResponseMessage response;
+            int retryCount = 0;
+            int maxRetries = 3;
+            do
+            {
+                response = await httpClient.PostAsync($"{_baseUrl}/polyanets", content);
+
+                if (!response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                {
+                    int delay = (int)Math.Pow(2, retryCount) * 1000; // Exponential backoff factor
+                    _logger.LogWarning($"Rate limit exceeded, retrying in {delay}ms...");
+                    await Task.Delay(delay);
+                    retryCount++;
+                }
+                else
+                {
+                    break;
+                }
+            } while (retryCount <= maxRetries);
 
             if (response.IsSuccessStatusCode)
             {
@@ -156,52 +190,134 @@ namespace Megaverse.Service
             else
             {
                 var errorResponse = await response.Content.ReadAsStringAsync();
-                if (errorResponse.Contains("Too Many Requests"))
-                {
-                    _logger.LogError($"Failed to create Polyanet at ({request.Row}, {request.Column}): {errorResponse}");
-                    await Task.Delay(15000); // Delay and retry or return error
-                }
+                _logger.LogError($"Failed to create Polyanet at ({request.Row}, {request.Column}): {errorResponse}");
                 return new AstralObjectResponse { Success = false, Error = errorResponse };
             }
         }
 
-            public async Task DeleteAllPolyanetsAsync(int gridSize)
+
+        public async Task DeleteAllPolyanetsAsync(int gridSize)
+        {
+            var tasks = new List<Task<AstralObjectResponse>>();
+            for (int row = 0; row < gridSize; row++)
             {
-                var tasks = new List<Task<AstralObjectResponse>>();
-                for (int row = 0; row < gridSize; row++)
+                for (int col = 0; col < gridSize; col++)
                 {
-                    for (int col = 0; col < gridSize; col++)
-                    {
-                        tasks.Add(DeletePolyanetAsync(row, col));
-                    }
-                }
-
-                // Wait for all the delete tasks to complete
-                var responses = await Task.WhenAll(tasks);
-
-                // Log the outcome of each delete operation
-                foreach (var response in responses)
-                {
-                    if (response.Success)
-                    {
-                        _logger.LogInformation($"Deleted Polyanet: Success");
-                    }
-                    else
-                    {
-                        _logger.LogError($"Failed to delete Polyanet: {response.Error}");
-                    }
+                    tasks.Add(DeletePolyanetAsync(row, col));
                 }
             }
 
+            // Wait for all the delete tasks to complete
+            var responses = await Task.WhenAll(tasks);
+
+            // Log the outcome of each delete operation
+            foreach (var response in responses)
+            {
+                if (response.Success)
+                {
+                    _logger.LogInformation($"Deleted Polyanet: Success");
+                }
+                else
+                {
+                    _logger.LogError($"Failed to delete Polyanet: {response.Error}");
+                }
+            }
+        }
 
 
 
-            // Implement other methods similarly
+
+        // Implement other methods similarly
+
+
+        public async Task<GoalMap> GetGoalMapAsync(string candidateId)
+        {
+            try
+            {
+                using var httpClient = _httpClient.CreateClient();
+                var response = await httpClient.GetAsync($"{_baseUrl}/map/{candidateId}/goal");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var goalMapJson = await response.Content.ReadAsStringAsync();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true // Ensure case-insensitive property name matching
+                    };
+                    var goalMap = JsonSerializer.Deserialize<GoalMap>(goalMapJson, options);
+
+                    if (goalMap != null && goalMap.Goal != null)
+                    {
+                        return goalMap;
+                    }
+                    else
+                    {
+                        // Log error and handle invalid JSON structure
+                        _logger.LogError("Invalid or missing 'Goal' property in JSON response.");
+                        return null;
+                    }
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Goal map not found for the provided candidate ID
+                    return null;
+                }
+                else
+                {
+                    // Log the error response
+                    var errorResponse = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Failed to fetch goal map for candidate ID {candidateId}. Response: {errorResponse}");
+                    throw new Exception($"Failed to fetch goal map. Status code: {response.StatusCode}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log and handle HTTP request exception
+                _logger.LogError($"HTTP request error while fetching goal map for candidate ID {candidateId}: {ex.Message}");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                // Log and handle JSON deserialization exception
+                _logger.LogError($"JSON deserialization error while fetching goal map for candidate ID {candidateId}: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Log and handle other exceptions
+                _logger.LogError($"Error fetching goal map for candidate ID {candidateId}: {ex.Message}");
+                throw;
+            }
         }
 
 
 
 
     }
+    public class GoalMap
+    {
+        public List<List<string>> Goal { get; set; }
+    }
+
+    public enum AstralObjectType
+    {
+        Polyanet,
+        Soloons,
+        Cometh
+    }
+
+    public class AstralObject
+    {
+        public AstralObjectType Type { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+
+        // Additional properties for specific types of astral objects
+        public string Color { get; set; } // For Soloons
+        public string Direction { get; set; } // For Comeths
+    }
+
+
+}
 
 
