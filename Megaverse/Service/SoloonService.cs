@@ -19,38 +19,6 @@ namespace Megaverse.Service
             _candidateId = candidateId;
         }
 
-        //public async Task<AstralObjectResponse> CreateSoloonAsync(SoloonObjectRequest request)
-        //{
-        //    using var httpClient = _httpClient.CreateClient();
-        //    var requestBody = new
-        //    {
-        //        candidateId = _candidateId,
-        //        row = request.Row,
-        //        column = request.Column,
-        //        color = request.Color
-        //    };
-        //    var jsonRequest = JsonSerializer.Serialize(requestBody);
-        //    var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-
-        //    var response = await httpClient.PostAsync($"{_baseUrl}/soloons", content);
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var astralObjectResponse = await response.Content.ReadFromJsonAsync<AstralObjectResponse>();
-        //        return astralObjectResponse;
-        //    }
-        //    else
-        //    {
-        //        var errorResponse = await response.Content.ReadAsStringAsync();
-        //        if (errorResponse.Contains("Too Many Requests"))
-        //        {
-        //            _logger.LogError($"Failed to create Soloon at ({request.Row}, {request.Column}): {errorResponse}");
-        //            await Task.Delay(25000); // Delay and retry or return error
-        //        }
-        //        return new AstralObjectResponse { Success = false, Error = errorResponse };
-        //    }
-        //}
-
         public async Task<AstralObjectResponse> CreateSoloonAsync(SoloonObjectRequest request)
         {
             using var httpClient = _httpClient.CreateClient();

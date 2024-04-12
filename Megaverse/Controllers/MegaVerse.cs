@@ -75,7 +75,7 @@ namespace Megaverse.Controllers
 
         // Example POST method for creating a Polyanet
         [HttpPost("polyanets")]
-        public async Task<IActionResult> CreatePolyanet([FromBody] AstralObjectRequest request)
+        public async Task<IActionResult> CreatePolyPlanet([FromBody] AstralObjectRequest request)
         {
             if (request == null || !ModelState.IsValid)
             {
