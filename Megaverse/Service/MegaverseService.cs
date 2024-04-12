@@ -149,7 +149,7 @@ namespace Megaverse.Service
             }
         }
 
-        public async Task<AstralObjectResponse> CreatePolyanetAsync(AstralObjectRequest request)
+        public async Task<AstralObjectResponse> CreatePolyaPlanetAsync(AstralObjectRequest request)
         {
             using var httpClient = _httpClient.CreateClient();
             var requestBody = new

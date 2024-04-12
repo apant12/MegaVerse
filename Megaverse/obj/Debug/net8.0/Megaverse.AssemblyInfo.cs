@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Megaverse")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a503f8626ab9581ddf1130a7f366f421e106a1cb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+951145c6f1138b399c4c79638084b77f1f45e5a4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Megaverse")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Megaverse")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

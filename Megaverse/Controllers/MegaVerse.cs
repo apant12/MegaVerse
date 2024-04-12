@@ -43,7 +43,7 @@ namespace Megaverse.Controllers
                             Column = column
                         };
                         // Use the existing CreatePolyanetAsync method in your service
-                        var result = await _megaService.CreatePolyanetAsync(request);
+                        var result = await _megaService.CreatePolyaPlanetAsync(request);
                         results.Add(result);
 
                         // Add error handling if result is not successful
@@ -84,7 +84,7 @@ namespace Megaverse.Controllers
 
             try
             {
-                var result = await _megaService.CreatePolyanetAsync(request);
+                var result = await _megaService.CreatePolyaPlanetAsync(request);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -376,7 +376,7 @@ namespace Megaverse.Controllers
                             Column = astralObject.Column,
                             CandidateId = "3ade151f-3c7d-4dd3-8588-2d197a3c0565"
                         };
-                        var polyanetResult = await _megaService.CreatePolyanetAsync(polyanetRequest);
+                        var polyanetResult = await _megaService.CreatePolyaPlanetAsync(polyanetRequest);
                         results.Add(polyanetResult);
                         break;
                     case AstralObjectType.Cometh:
